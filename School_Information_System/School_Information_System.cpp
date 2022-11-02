@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "UI_Menu.h";
+#include "Menu_Item.h";
 
 using std::string;
 
@@ -11,12 +12,19 @@ int main()
 {
 	UI_Menu* uiMenu = new UI_Menu();
 
-	string studentOptions[4] = {
+	
+
+	string studentMainMenu[4] = {
 		"Check grades",
 		"Timetable",
 		"Learning progress",
 		"Classes"
 	};
 
-	while(uiMenu->PrintMenu(studentOptions, 4));
+	//UI_Menu studentMainMenuOptions[4] = 
+	//{
+	//	
+	//}
+
+	while(uiMenu->PrintMenu(studentMainMenu, 4));
 }

@@ -9,7 +9,7 @@ class UI_Menu
 	bool exitMenu = false;
 	int menuOptionIndex = 0;
 
-	void TakeInput(int amountOfOptions);
+	bool TakeInput(int amountOfOptions);
 
 public:
 	bool PrintMenu(string* menuOptions, int amountOfOptions);
