@@ -9,9 +9,9 @@ class UI_Menu
 	bool exitMenu = false;
 	int menuOptionIndex = 0;
 
-	bool TakeInput(int amountOfOptions);
+	bool TakeInput(string menuFile);
 
 public:
-	bool PrintMenu(string* menuOptions, int amountOfOptions);
+	bool PrintMenu(string menuFile);
 };
 
