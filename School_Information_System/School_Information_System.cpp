@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include "UI_Menu.h";
-#include "Menu_Item.h";
 
 using std::ofstream;
 using std::ifstream;
@@ -23,9 +22,9 @@ int main()
 {
 	UI_Menu* uiMenu = new UI_Menu();
 
-	//UI_Menu studentMainMenuOptions[4] = 
+	//UI_Menu studentMainMenuOptions[4] =
 	//{
-	//	
+	//
 	//}
 
 	while (uiMenu->PrintMenu("mainmenu.csv"));
