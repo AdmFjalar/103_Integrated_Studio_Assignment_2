@@ -1,29 +1,29 @@
-#include "UI_Menu.h"
-#include <iostream>;
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <conio.h>
+#include "UI_Menu.h"		//Includes headerfile for the class
+#include <iostream>;		//Input output stream library
+#include <fstream>			//Filestream library
+#include <sstream>			//Stringstream library
+#include <string>			//String library
+#include <vector>			//Vector library
+#include <conio.h>			//Console input output library
 
-#define UP_ARROW 72
-#define DOWN_ARROW 80
-#define LEFT_ARROW 75
-#define RIGHT_ARROW 77
+#define UP_ARROW 72			//Defines the keycode for the up arrow, improving readability in the code
+#define DOWN_ARROW 80		//Defines the keycode for the down arrow, improving readability in the code
+#define LEFT_ARROW 75		//Defines the keycode for the left arrow, improving readability in the code
+#define RIGHT_ARROW 77		//Defines the keycode for the right arrow, improving readability in the code
 
-using std::fstream;
-using std::stringstream;
-using std::ios;
-using std::string;
-using std::vector;
-using std::cout;
-using std::cin;
+using std::fstream;			//Filestream
+using std::stringstream;	//Stringstream
+using std::ios;				//Data stream flags
+using std::string;			//String
+using std::vector;			//Vectors
+using std::cout;			//Output to console
+using std::cin;				//Input from console
 
 bool UI_Menu::TakeInput(string menuFile)
 {
 	fstream fileStream;												//Declares the filestream used to load the contents of the menu csv file
 
-	fileStream.open(menuFile, ios::in | ios::beg);		//Opens specified menu file
+	fileStream.open(menuFile, ios::in | ios::beg);					//Opens specified menu file
 
 	if (!fileStream.is_open())										//Checks if the file failed to open
 	{
@@ -35,15 +35,15 @@ bool UI_Menu::TakeInput(string menuFile)
 	vector<string> row;												//Stores individual cells in a row, allowing for indexing of the row
 	vector<vector<string>> fileContent;								//Stores the entire table of rows, allowing for indexing both x and y axis
 
-	while (getline(fileStream, line, '\n'))		//Goes through row for row and feeds each currently indexed row into line
+	while (getline(fileStream, line, '\n'))							//Goes through row for row and feeds each currently indexed row into line
 	{
 		row.clear();												//Clears previously held row information
 		stringstream stream(line);									//Prepares the line for stream manipulation
-		while (getline(stream, word, ','))		//Goes through cell for cell and feeds each currently indexed cell into word
+		while (getline(stream, word, ','))							//Goes through cell for cell and feeds each currently indexed cell into word
 		{
-			row.push_back(word);								//Adds the currently indexed cell to the current row
+			row.push_back(word);									//Adds the currently indexed cell to the current row
 		}
-		fileContent.push_back(row);								//Feeds the row into the table/matrix
+		fileContent.push_back(row);									//Feeds the row into the table/matrix
 	}
 
 	fileStream.close();												//Disassociates/closes the filestream
@@ -75,8 +75,8 @@ bool UI_Menu::TakeInput(string menuFile)
 		if (fileContent[menuOptionIndex].size() > 1)
 		{
 			while (nextMenu->PrintMenu(fileContent[menuOptionIndex][1]));	//Opens a new menu which will be looped until the user uses the left arrow to leave it. 
-																					//It loads the file location with the index of the currently selected option and selects 
-																					//the second cell of the corresponding row in the CSV file
+																			//It loads the file location with the index of the currently selected option and selects 
+																			//the second cell of the corresponding row in the CSV file
 		}																			
 		return true;												//Returns that this menu should be kept open
 		break;
@@ -98,7 +98,7 @@ bool UI_Menu::PrintMenu(string menuFile)
 {
 	fstream fileStream;												//Declares the filestream used to load the contents of the menu csv file
 
-	fileStream.open(menuFile, ios::in | ios::beg);		//Opens specified menu file
+	fileStream.open(menuFile, ios::in | ios::beg);					//Opens specified menu file
 
 	if (!fileStream.is_open())										//Checks if the file failed to open
 	{
@@ -110,40 +110,40 @@ bool UI_Menu::PrintMenu(string menuFile)
 	vector<string> row;												//Stores individual cells in a row, allowing for indexing of the row
 	vector<vector<string>> fileContent;								//Stores the entire table of rows, allowing for indexing both x and y axis
 
-	while (getline(fileStream, line, '\n'))		//Goes through row for row and feeds each currently indexed row into line
+	while (getline(fileStream, line, '\n'))							//Goes through row for row and feeds each currently indexed row into line
 	{
 		row.clear();												//Clears previously held row information
 		stringstream stream(line);									//Prepares the line for stream manipulation
-		while (getline(stream, word, ','))		//Goes through cell for cell and feeds each currently indexed cell into word
+		while (getline(stream, word, ','))							//Goes through cell for cell and feeds each currently indexed cell into word
 		{
-			row.push_back(word);								//Adds the currently indexed cell to the current row
+			row.push_back(word);									//Adds the currently indexed cell to the current row
 		}
-		fileContent.push_back(row);								//Feeds the row into the table/matrix
+		fileContent.push_back(row);									//Feeds the row into the table/matrix
 	}
 
 	fileStream.close();												//Disassociates/closes the filestream
 
-	cout << "-----------------------------------------\n";
-	cout << "--------- Navigate with arrow keys ------\n";
+	cout << "-----------------------------------------\n";			
+	cout << "--------- Navigate with arrow keys ------\n";			//Outputs instructions for how to navigate the menu
 	cout << "------ < Exit menu --- Enter menu > -----\n";
 	cout << "---------- ^ Go up --- Go down V --------\n";
 	cout << "-----------------------------------------\n\n";
 
-	cout << "-----------------------------------------\n";
-	for (int i = 0; i < fileContent.size(); i++)
+	cout << "-----------------------------------------\n";			
+	for (int i = 0; i < fileContent.size(); i++)					//Goes through all the options in the menu file
 	{
-		if (i == menuOptionIndex)
+		if (i == menuOptionIndex)									//Checks if it's at the user's current selection
 		{
-			cout << "*";
+			cout << "*";											//Outputs an asteriks to show current selection
 		}
 		else {
-			cout << " ";
+			cout << " ";											//Adds a space if it isn't the current selection so that all options will be at the same screen width
 		}
-		cout << " " << fileContent[i][0];
+		cout << " " << fileContent[i][0];							//Outputs an extra space and the preview text for the menu option
 		cout << '\n';
 	}
 	cout << "-----------------------------------------\n";
 	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 
-	return TakeInput(menuFile);
+	return TakeInput(menuFile);										//Takes input for the menu, and returns if the user has selected to stay in the menu or not
 }
