@@ -4,12 +4,16 @@
 #include <iostream>
 #include <string>
 #include "UI_Menu.h";
+#include "Base_Member.h";
 
+using std::cout;
+using std::cin;
 using std::string;
 
 int main()
 {
-	// testing push
+	Base_Member* base_Member = new Base_Member();
+	
 	UI_Menu* uiMenu = new UI_Menu();
 
 	string studentOptions[4] = {
