@@ -1,1 +1,5 @@
-﻿  School_Information_System.vcxproj -> C:\Users\270045020\OneDrive - UP Education\Documents\GitHub\103_Integrated_Studio_Assignment_2\x64\Debug\School_Information_System.exe
+﻿  School_Information_System.cpp
+C:\Users\270242258\OneDrive - UP Education\Desktop\yeet\103_Integrated_Studio_Assignment_2\School_Information_System\School_Information_System.cpp(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\270242258\OneDrive - UP Education\Desktop\yeet\103_Integrated_Studio_Assignment_2\School_Information_System\School_Information_System.cpp(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\270242258\OneDrive - UP Education\Desktop\yeet\103_Integrated_Studio_Assignment_2\School_Information_System\School_Information_System.cpp(36,20): error C2660: 'createUserAccount': function does not take 0 arguments
+C:\Users\270242258\OneDrive - UP Education\Desktop\yeet\103_Integrated_Studio_Assignment_2\School_Information_System\School_Information_System.cpp(19,6): message : see declaration of 'createUserAccount'
