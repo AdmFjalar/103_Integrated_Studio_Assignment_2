@@ -9,6 +9,7 @@ using std::string;
 
 int main()
 {
+	// testing push
 	UI_Menu* uiMenu = new UI_Menu();
 
 	string studentOptions[4] = {
