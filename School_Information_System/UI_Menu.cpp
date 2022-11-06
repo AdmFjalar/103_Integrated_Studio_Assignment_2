@@ -74,7 +74,7 @@ bool UI_Menu::TakeInput(string menuFile)
 			UI_Menu* nextMenu = new UI_Menu();
 			if (fileContent[menuOptionIndex].size() > 1)
 			{
-				while (nextMenu->PrintMenu(fileContent[menuOptionIndex][1]));	//	Opens a new menu which will be looped until the user uses the left arrow to leave it. 
+				while (nextMenu->PrintMenu(fileContent[menuOptionIndex][1], fileContent[menuOptionIndex][2]));	//	Opens a new menu which will be looped until the user uses the left arrow to leave it. 
 																				//	It loads the file location with the index of the currently selected option and selects 
 																				//	the second cell of the corresponding row in the CSV file
 			}																			
@@ -94,7 +94,7 @@ bool UI_Menu::TakeInput(string menuFile)
 	}
 }
 
-bool UI_Menu::PrintMenu(string menuFile)
+bool UI_Menu::PrintMenu(string menuFile, string inputType)
 {
 	fstream fileStream;												//	Declares the filestream used to load the contents of the menu csv file
 
@@ -123,27 +123,40 @@ bool UI_Menu::PrintMenu(string menuFile)
 
 	fileStream.close();												//	Disassociates/closes the filestream
 
-	cout << "-----------------------------------------\n";			//	Outputs a line to outline instructions
-	cout << "--------- Navigate with arrow keys ------\n";			//	Outputs instructions for how to navigate the menu
-	cout << "------ < Exit menu --- Enter menu > -----\n";			//	Outputs instructions for how to navigate the menu
-	cout << "---------- ^ Go up --- Go down V --------\n";			//	Outputs instructions for how to navigate the menu
-	cout << "-----------------------------------------\n\n";		//	Outputs a line to outline instructions
-
-	cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
-	for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+	if (inputType == "arrow_keys")
 	{
-		if (i == menuOptionIndex)									//	Checks if it's at the user's current selection
-		{
-			cout << "*";											//	Outputs an asteriks to show current selection
-		}
-		else {														//	Enters here if it's currently iterating anything other than the current user choice
-			cout << " ";											//	Adds a space if it isn't the current selection so that all options will be at the same screen width
-		}
-		cout << " " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
-		cout << '\n';												//	Adds a linebreak to separate menu options on different lines
-	}
-	cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
-	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
+		cout << "-----------------------------------------\n";			//	Outputs a line to outline instructions
+		cout << "--------- Navigate with arrow keys ------\n";			//	Outputs instructions for how to navigate the menu
+		cout << "------ < Exit menu --- Enter menu > -----\n";			//	Outputs instructions for how to navigate the menu
+		cout << "---------- ^ Go up --- Go down V --------\n";			//	Outputs instructions for how to navigate the menu
+		cout << "-----------------------------------------\n\n";		//	Outputs a line to outline instructions
 
-	return TakeInput(menuFile);										//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
+		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+		for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+		{
+			if (i == menuOptionIndex)									//	Checks if it's at the user's current selection
+			{
+				cout << "*";											//	Outputs an asteriks to show current selection
+			}
+			else {														//	Enters here if it's currently iterating anything other than the current user choice
+				cout << " ";											//	Adds a space if it isn't the current selection so that all options will be at the same screen width
+			}
+			cout << " " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
+			cout << '\n';												//	Adds a linebreak to separate menu options on different lines
+		}
+		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+		cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
+
+		return TakeInput(menuFile);										//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
+	}
+	else if (inputType == "login")
+	{
+
+	}
+	else if (inputType == "signup") {
+
+	}
+	else {
+		return true;
+	}
 }

@@ -21,5 +21,5 @@ class UI_Menu
 		/// </summary>
 		/// <param name="menuFile">Menu csv file adress to output</param>
 		/// <returns>Returns whether to keep current menu open or not</returns>
-		bool PrintMenu(string menuFile);
+		bool PrintMenu(string menuFile, string inputType);
 };
