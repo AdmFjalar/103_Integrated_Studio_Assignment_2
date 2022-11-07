@@ -13,7 +13,8 @@ class UI_Menu
 		/// </summary>
 		/// <param name="menuFile">File name for the menu to navigate</param>
 		/// <returns>Returns whether to keep current menu open or not</returns>
-		bool TakeInput(string menuFile);
+		bool TakeArrowKeys(string menuFile);
+		bool TakeBackKey();
 
 	public:
 		/// <summary>

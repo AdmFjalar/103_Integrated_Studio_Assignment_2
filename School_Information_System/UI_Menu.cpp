@@ -19,7 +19,7 @@ using std::vector;			//	Vectors
 using std::cout;			//	Output to console
 using std::cin;				//	Input from console
 
-bool UI_Menu::TakeInput(string menuFile)
+bool UI_Menu::TakeArrowKeys(string menuFile)
 {
 	fstream fileStream;												//	Declares the filestream used to load the contents of the menu csv file
 
@@ -94,6 +94,17 @@ bool UI_Menu::TakeInput(string menuFile)
 	}
 }
 
+bool UI_Menu::TakeBackKey()
+{
+	if (_getch() == LEFT_ARROW)
+	{
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
 bool UI_Menu::PrintMenu(string menuFile, string inputType)
 {
 	fstream fileStream;												//	Declares the filestream used to load the contents of the menu csv file
@@ -147,7 +158,19 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType)
 		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
 		cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
 
-		return TakeInput(menuFile);										//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
+		return TakeArrowKeys(menuFile);										//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
+	}
+	else if (inputType == "none")
+	{
+		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+		for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+		{
+			cout << "  " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
+			cout << '\n';												//	Adds a linebreak to separate menu options on different lines
+		}
+		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+		cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
+		return TakeBackKey();
 	}
 	else if (inputType == "login")
 	{
@@ -156,7 +179,16 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType)
 	else if (inputType == "signup") {
 
 	}
+	else if (inputType == "changePassword")
+	{
+
+	}
+	else if (inputType == "changeUserDetails")
+	{
+
+	}
 	else {
-		return true;
+		cout << "ERROR! CSV menu file does not specify valid input type.\n";
+		return false;
 	}
 }

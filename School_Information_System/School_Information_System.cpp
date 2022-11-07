@@ -27,5 +27,5 @@ int main()
 	//
 	//}
 
-	while (uiMenu->PrintMenu("mainmenu.csv"));
+	while (uiMenu->PrintMenu("mainmenu.csv", "arrow_keys"));
 }
