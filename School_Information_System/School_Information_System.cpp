@@ -15,6 +15,7 @@ using std::string;
 using std::ios;
 using std::vector;
 using std::fstream;
+using std::stringstream;
 
 void createUserAccount(string _name, string _password, int _userAccessLevel, int _id);
 void userLogin(string _name, string _password);
@@ -98,5 +99,44 @@ void userLogin(string _name, string _password) {
 	cout << "Enter your password: ";
 	cin >> _password;
 
+	// reading the line in the userDataBase 
+	while (getline(userDataBase, line, '\n')) {
+		row.clear();
+		// assigning the variable line to stream
+		stringstream stream(line);
+		
+		// reading through the variables
+		while (getline(stream, word, ',')) {
+			row.push_back(word);
+		}
+		fileContent.push_back(row);
+	}
 
+	// looping through the vector 
+	for (vector<string> row : fileContent) {
+		// checking if the name address is at 0 and the password address is at 1
+		if (_name == row.at(0) && _password.at(1)) {
+			cout << "Welcome " << _name << '\n';
+
+			// checking whether the user is a user or an admin
+			switch (stoi(row.at(2))) {
+
+			case 0:
+				// user functionality
+				cout << "logged in as user" << '\n';
+				break;
+
+			case 1:
+				// admin functionality
+				cout << "logged in as admin" << '\n';
+				break;
+			}
+		}
+	}
+
+	// closing the .csv file
+	userDataBase.close();
+
+	//clearing the file content vector
+	fileContent.clear();
 }
