@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "UI_Menu.h";
+#include "School.h";
 
 using std::string;
 
