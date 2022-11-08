@@ -2,21 +2,30 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <string>
+#include <vector>
 #include "UI_Menu.h";
 
+using std::ofstream;
+using std::ifstream;
+using std::fstream;
+using std::stringstream;
+using std::ios;
 using std::string;
+using std::vector;
+using std::cout;
+using std::cin;
 
 int main()
 {
 	UI_Menu* uiMenu = new UI_Menu();
 
-	string studentOptions[4] = {
-		"Check grades",
-		"Timetable",
-		"Learning progress",
-		"Classes"
-	};
+	//UI_Menu studentMainMenuOptions[4] =
+	//{
+	//
+	//}
 
-	while(uiMenu->PrintMenu(studentOptions, 4));
+	while (uiMenu->PrintMenu("mainmenu.csv", "arrow_keys"));
 }
