@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 #include "UI_Menu.h";
+#include "School.h";
+#include "Base_Member.h";
 
 using std::ofstream;
 using std::ifstream;
