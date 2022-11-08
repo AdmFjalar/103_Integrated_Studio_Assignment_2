@@ -20,4 +20,3 @@ public:
 
 	void userLogin(string _name, string _password);
 };
-
