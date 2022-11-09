@@ -1,4 +1,3 @@
-Classes,classes.csv,arrow_keys
-Time table,timetable.csv,none
-Learning progress,learningprogress.csv,none
-Grades,grades.csv,none
+Welcome to School Information System,classes.csv,
+Create Account,No_Menu_File,signup
+Log in,No_Menu_File,login

@@ -5,6 +5,7 @@
 #include <string>			//	String library
 #include <vector>			//	Vector library
 #include <conio.h>			//	Console input output library
+#include <time.h>			//	Time library
 
 #define UP_ARROW 72			//	Defines the keycode for the up arrow, improving readability in the code
 #define DOWN_ARROW 80		//	Defines the keycode for the down arrow, improving readability in the code
@@ -105,23 +106,130 @@ bool UI_Menu::TakeBackKey()
 	}
 }
 
-bool UI_Menu::PrintMenu(string menuFile, string inputType)
+/// <summary>
+/// 
+/// </summary>
+/// <param name="_name"></param>
+/// <param name="_password"></param>
+bool UI_Menu::UserLogin()
 {
-	fstream fileStream;												//	Declares the filestream used to load the contents of the menu csv file
+	string name, password;
+	int numAttempts = 0;
 
-	fileStream.open(menuFile, ios::in | ios::beg);					//	Opens specified menu file
+	fstream userDataBase;
 
-	if (!fileStream.is_open())										//	Checks if the file failed to open
-	{
-		cout << "Warning! File could not be opened.\n";				//	Gives warning message
-		return false;												//	Exits the function
+	userDataBase.open("userDataBase.csv", ios::in | ios::app);
+
+	string line, word;
+
+	// Vectors to divide up .csv file into rows and cells
+	vector<string> row;
+
+	vector<vector<string>> fileContent;
+
+	// conditional statement to check if the file is open
+	if (!userDataBase.is_open()) {
+		cout << "Warning file is not open" << '\n';
+		return false;
 	}
 
+	// reading the line in the userDataBase 
+	while (getline(userDataBase, line, '\n')) {
+		row.clear();
+		// assigning the variable line to stream
+		stringstream stream(line);
+
+		// reading through the variables
+		while (getline(stream, word, ',')) {
+			row.push_back(word);
+		}
+		fileContent.push_back(row);
+	}
+	
+	// closing the .csv file
+	userDataBase.close();
+
+	while (numAttempts < 3)
+	{
+		cout << "\n------------------------------- User Login -------------------------------" << "\n\n\n";
+
+		// taking user input for username and password
+		cout << "Enter your username: ";
+		cin >> name;
+		cout << "Enter your password: ";
+		cin >> password;
+
+		// looping through the vector 
+		for (vector<string> row : fileContent) {
+			// checking if the name address is at 0 and the password address is at 1
+			if (name == row.at(0) && password.at(1)) {
+				cout << "Welcome " << name << '\n';
+
+				// checking whether the user is a user or an admin
+				switch (stoi(row.at(2))) {
+
+				case 0:
+					// user functionality
+					cout << "logged in as user" << '\n';
+					return true;
+					break;
+
+				case 1:
+					// admin functionality
+					cout << "logged in as admin" << '\n';
+					return true;
+					break;
+				}
+			}
+		}
+
+		numAttempts++;
+		cout << "Incorrect credentials! Try again. (" << 3 - numAttempts << " attempts left)\n";
+	}
+
+	return false;
+}
+
+void UI_Menu::CreateUserAccount()
+{
+	string name, password;
+	int id, userAccessLevel;
+
+	userAccessLevel = 0;
+	id = 0;
+
+	fstream userDataBase("userDataBase.csv", ios::in | ios::app);
+
+	// conditional statement to check if the file is open
+	if (!userDataBase.is_open()) {
+		cout << "Warning file is not open" << '\n';
+		return;
+	}
+
+	cout << "\n------------------------------- Create account -------------------------------" << "\n\n\n";
+
+	// Need to add a id generator here:
+	
+	srand(time(NULL));
+
+	id = rand() % 500000 + 270000000;
+
+	// taking user input for username and password
+	cout << "Enter your username: ";
+	cin >> name;
+	cout << "Enter your password: ";
+	cin >> password;
+
+	cout << "You've been assigned ID " << id << "\n\n";
+
+
+
+	//---------------- Validating unique ID ----------------
 	string line, word;												//	Line is fed the rows, word is used for the cells of the table
 	vector<string> row;												//	Stores individual cells in a row, allowing for indexing of the row
 	vector<vector<string>> fileContent;								//	Stores the entire table of rows, allowing for indexing both x and y axis
 
-	while (getline(fileStream, line, '\n'))							//	Goes through row for row and feeds each currently indexed row into line
+	while (getline(userDataBase, line, '\n'))							//	Goes through row for row and feeds each currently indexed row into line
 	{
 		row.clear();												//	Clears previously held row information
 		stringstream stream(line);									//	Prepares the line for stream manipulation
@@ -132,52 +240,99 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType)
 		fileContent.push_back(row);									//	Feeds the row into the table/matrix
 	}
 
-	fileStream.close();												//	Disassociates/closes the filestream
-
-	if (inputType == "arrow_keys")
+	for (vector<string> row : fileContent)
 	{
-		cout << "-----------------------------------------\n";			//	Outputs a line to outline instructions
-		cout << "--------- Navigate with arrow keys ------\n";			//	Outputs instructions for how to navigate the menu
-		cout << "------ < Exit menu --- Enter menu > -----\n";			//	Outputs instructions for how to navigate the menu
-		cout << "---------- ^ Go up --- Go down V --------\n";			//	Outputs instructions for how to navigate the menu
-		cout << "-----------------------------------------\n\n";		//	Outputs a line to outline instructions
-
-		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
-		for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+		while (row[0] == std::to_string(id))
 		{
-			if (i == menuOptionIndex)									//	Checks if it's at the user's current selection
-			{
-				cout << "*";											//	Outputs an asteriks to show current selection
-			}
-			else {														//	Enters here if it's currently iterating anything other than the current user choice
-				cout << " ";											//	Adds a space if it isn't the current selection so that all options will be at the same screen width
-			}
-			cout << " " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
-			cout << '\n';												//	Adds a linebreak to separate menu options on different lines
+			id = rand() % 1000000 + 270000000;
 		}
-		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
-		cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
-
-		return TakeArrowKeys(menuFile);										//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
 	}
-	else if (inputType == "none")
+	//------------- End of validating unique ID -------------
+
+
+
+	// storing input data into csv file
+	userDataBase << id << "," << name << "," << password << "," << userAccessLevel << '\n';
+}
+
+bool UI_Menu::PrintMenu(string menuFile, string inputType)
+{
+	if (menuFile != "No_Menu_File")
 	{
-		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
-		for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+		fstream fileStream;												//	Declares the filestream used to load the contents of the menu csv file
+
+		fileStream.open(menuFile, ios::in | ios::beg);					//	Opens specified menu file
+
+		if (!fileStream.is_open())										//	Checks if the file failed to open
 		{
-			cout << "  " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
-			cout << '\n';												//	Adds a linebreak to separate menu options on different lines
+			cout << "Warning! File could not be opened.\n";				//	Gives warning message
+			return false;												//	Exits the function
 		}
-		cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
-		cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
-		return TakeBackKey();
+
+		string line, word;												//	Line is fed the rows, word is used for the cells of the table
+		vector<string> row;												//	Stores individual cells in a row, allowing for indexing of the row
+		vector<vector<string>> fileContent;								//	Stores the entire table of rows, allowing for indexing both x and y axis
+
+		while (getline(fileStream, line, '\n'))							//	Goes through row for row and feeds each currently indexed row into line
+		{
+			row.clear();												//	Clears previously held row information
+			stringstream stream(line);									//	Prepares the line for stream manipulation
+			while (getline(stream, word, ','))							//	Goes through cell for cell and feeds each currently indexed cell into word
+			{
+				row.push_back(word);									//	Adds the currently indexed cell to the current row
+			}
+			fileContent.push_back(row);									//	Feeds the row into the table/matrix
+		}
+
+		fileStream.close();												//	Disassociates/closes the filestream
+
+		if (inputType == "arrow_keys")
+		{
+			cout << "-----------------------------------------\n";			//	Outputs a line to outline instructions
+			cout << "--------- Navigate with arrow keys ------\n";			//	Outputs instructions for how to navigate the menu
+			cout << "------ < Exit menu --- Enter menu > -----\n";			//	Outputs instructions for how to navigate the menu
+			cout << "---------- ^ Go up --- Go down V --------\n";			//	Outputs instructions for how to navigate the menu
+			cout << "-----------------------------------------\n\n";		//	Outputs a line to outline instructions
+
+			cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+			for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+			{
+				if (i == menuOptionIndex)									//	Checks if it's at the user's current selection
+				{
+					cout << "*";											//	Outputs an asteriks to show current selection
+				}
+				else {														//	Enters here if it's currently iterating anything other than the current user choice
+					cout << " ";											//	Adds a space if it isn't the current selection so that all options will be at the same screen width
+				}
+				cout << " " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
+				cout << '\n';												//	Adds a linebreak to separate menu options on different lines
+			}
+			cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+			cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
+
+			return TakeArrowKeys(menuFile);										//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
+		}
+		else if (inputType == "none")
+		{
+			cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+			for (int i = 0; i < fileContent.size(); i++)					//	Goes through all the options in the menu file
+			{
+				cout << "  " << fileContent[i][0];							//	Outputs an extra space and the preview text for the menu option
+				cout << '\n';												//	Adds a linebreak to separate menu options on different lines
+			}
+			cout << "-----------------------------------------\n";			//	Outputs a line to outline menu
+			cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";					//	Adds 18 linebreaks so that only the current menu is visible
+			return TakeBackKey();
+		}
 	}
 	else if (inputType == "login")
 	{
-
+		UserLogin();
+		return false;
 	}
 	else if (inputType == "signup") {
-
+		CreateUserAccount();
+		return false;
 	}
 	else if (inputType == "changePassword")
 	{
