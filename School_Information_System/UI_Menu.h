@@ -5,13 +5,24 @@ using std::string;
 
 class UI_Menu
 {
-	bool enteredMenu = false;
-	bool exitMenu = false;
-	int menuOptionIndex = 0;
+	private:
+		int menuOptionIndex = 0;	//Used navigate through menu indexes
 
-	void TakeInput(int amountOfOptions);
+		/// <summary>
+		/// Takes arrow key input to navigate the menu options
+		/// </summary>
+		/// <param name="menuFile">File name for the menu to navigate</param>
+		/// <returns>Returns whether to keep current menu open or not</returns>
+		bool TakeArrowKeys(string menuFile);
+		bool TakeBackKey();
+		bool UserLogin();
+		void CreateUserAccount();
 
-public:
-	bool PrintMenu(string* menuOptions, int amountOfOptions);
+	public:
+		/// <summary>
+		/// Outputs input instructions, menu options and highlights the user's selected option
+		/// </summary>
+		/// <param name="menuFile">Menu csv file adress to output</param>
+		/// <returns>Returns whether to keep current menu open or not</returns>
+		bool PrintMenu(string menuFile, string inputType);
 };
-
