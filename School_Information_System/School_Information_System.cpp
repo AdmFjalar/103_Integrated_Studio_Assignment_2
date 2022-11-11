@@ -142,7 +142,7 @@ void UserLogin(string _name, string _password) {
 
 void teacherFunctionality() {
 
-	string data;
+	string input;
 
 	fstream englishDataBase;
 	
@@ -162,9 +162,9 @@ void teacherFunctionality() {
 	}
 
 	cout << "(testing purposes only)Enter data: ";
-	cin >> data;
+	cin >> input;
 
-	englishDataBase << data << ",";
+	englishDataBase << input << ",";
 
 	// reading the line in the userDataBase 
 	while (getline(englishDataBase, line, '\n')) {
@@ -179,5 +179,9 @@ void teacherFunctionality() {
 		fileContent.push_back(row);
 	}
 
-	
+	// closing the .csv file
+	englishDataBase.close();
+
+	//clearing the file content vector
+	fileContent.clear();
 }

@@ -19,4 +19,6 @@ public:
 	void createUserAccount(string _name, string _password, int _userAccessLevel, int _id);
 
 	void userLogin(string _name, string _password);
+
+	
 };
