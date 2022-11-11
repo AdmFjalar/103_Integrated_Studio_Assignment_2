@@ -42,6 +42,12 @@ void fileWrite(string& fileName) {
     cin >> age;
     cout << "\nEnter course: ";
     cin >> course;
+    cout << "\nEnter course A: ";
+    cin >> courseA;
+    cout << "\nEnter course B: ";
+    cin >> courseB;
+    cout << "\nEnter course C: ";
+    cin >> courseC;
     cout << "\nGrade of student: ";
     cin >> grades; 
     cout << "\nEnter Term Number(eg: 1, 2, 3 or 4)";
