@@ -15,10 +15,4 @@ public:
 
 	Base_Member();
 	Base_Member(int _age, int _id, string _name, string _password, int _userAccessLevel);
-
-	void createUserAccount(string _name, string _password, int _userAccessLevel, int _id);
-
-	void userLogin(string _name, string _password);
-
-	
 };

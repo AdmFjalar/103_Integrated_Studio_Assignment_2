@@ -15,6 +15,8 @@ class UI_Menu
 		/// <returns>Returns whether to keep current menu open or not</returns>
 		bool TakeArrowKeys(string menuFile);
 		bool TakeBackKey();
+		bool UserLogin();
+		void CreateUserAccount();
 
 	public:
 		/// <summary>
