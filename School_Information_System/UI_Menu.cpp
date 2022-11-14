@@ -604,3 +604,8 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		return false;
 	}
 }
+
+
+
+
+// hide sidebar 
