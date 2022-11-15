@@ -40,12 +40,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="grades.csv">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="english.csv">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="userDataBase.csv">
       <Filter>Source Files</Filter>
     </None>
