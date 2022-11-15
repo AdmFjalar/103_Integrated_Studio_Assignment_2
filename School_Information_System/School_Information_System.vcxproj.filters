@@ -21,10 +21,27 @@
     <ClCompile Include="UI_Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="School.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_Member.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UI_Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="School.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Base_Member.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="userDataBase.csv">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
