@@ -127,13 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Base_Member.cpp" />
     <ClCompile Include="School.cpp" />
     <ClCompile Include="School_Information_System.cpp" />
     <ClCompile Include="UI_Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Base_Member.h" />
     <ClInclude Include="School.h" />
     <ClInclude Include="UI_Menu.h" />
   </ItemGroup>
