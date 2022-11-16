@@ -29,6 +29,7 @@ bool UI_Menu::TakeArrowKeys(string menuFile, int id)
 	if (!fileStream.is_open())										//	Checks if the file failed to open
 	{
 		cout << "Warning! File could not be opened.\n";				//	Gives warning message
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();										//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 
@@ -289,7 +290,8 @@ void UI_Menu::CreateUserAccount()
 	{
 		cout << "Warning! File couldn't be opened.\n";
 		
-		TakeBackKey();																		//	Waits until the user presses the back(left) arrow and then closes the menu
+		TakeBackKey();
+		cout << "Press left arrow key to return to previous menu.\n";//	Waits until the user presses the back(left) arrow and then closes the menu
 		return;
 	}
 
@@ -359,6 +361,7 @@ void UI_Menu::EditGrades(string courseName)
 	if (!courseDataBase.is_open())												//	Checks if the filestream failed to open
 	{
 		cout << "Warning! File couldn't be opened.\n";
+		cout << "Press left arrow key to return to previous menu.\n";
 		TakeBackKey();											//	Waits until the user presses the back(left) arrow and then closes the menu
 		return;
 	}
@@ -482,6 +485,8 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			}
 			cout << "-----------------------------------------\n";		//	Outputs a line to outline menu
 			cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";				//	Adds 18 linebreaks so that only the current menu is visible
+			
+			cout << "Press left arrow key to return to previous menu.\n";
 			return TakeBackKey();										//	Waits until the user presses the back(left)arrow and then closes the menu
 		}
 	}							
@@ -506,6 +511,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			cout << "\t\t" << term << '\n';								//	Outputs 2 indentations and the currently indexed term
 		}
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();											//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "facultyList")									//	Enters here and loads staff members and their contact details
@@ -531,6 +537,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			}
 		}
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();												//	Waits until user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "editGradeMenu")								//	Enters here and lets user edit grades of any student enrolled in their courses
@@ -559,6 +566,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		else {															//	Enters here if the user has no assigned courses (thus a default value of placeholder at the first course index)
 			cout << "Warning! No courses assigned to this account.\n";
 		}
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "guardianGrades")										//	Enters here and lets guardian see their children and any of their related courses as well as course progress
@@ -607,6 +615,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		else {																	//	Enters here if the user has no children assigned
 			cout << "Warning! No children assigned to your account.\n";
 		}
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "studentGrades")										//	Enters here and lets student see their grades/progress in all their enrolled courses
@@ -640,6 +649,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			cout << "Warning! No courses have been assigned to your account.\n";
 		}
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "studentGuardians")											//	Enters here and lets student see all guardians/parents assigned to their account
@@ -658,6 +668,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		else {																			//	Enters here if the first guardian is a placeholder, thus having no guardians assigned
 			cout << "Warning! No guardians assigned to your account.\n";
 		}
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();															//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "createCourse")									//	Enters here and lets admin create a new course
@@ -691,6 +702,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		if (!courses.is_open())												//	Checks if the filestream failed to open
 		{
 			cout << "Warning! File couldn't be opened.\n";
+			cout << "Press left arrow key to return to previous menu.\n";
 			return TakeBackKey();											//	Waits until the user presses the back(left) arrow and then closes the menu
 		}
 
@@ -700,6 +712,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 
 		cout << "Successfully added course!\n";
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();												//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "assignCourse")																	//	Enters here and lets admin assign a user (teacher or student) a course
@@ -797,6 +810,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 								if (!changeUserFile.is_open())												//	Checks if the filestream failed to open
 								{
 									cout << "Warning! File couldn't be opened.\n";
+									cout << "Press left arrow key to return to previous menu.\n";
 									return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
 								}
 
@@ -829,6 +843,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 									if (!selectedCourseFile.is_open())										//	Checks if the filestream failed to open
 									{
 										cout << "Warning! File couldn't be opened.\n";
+										cout << "Press left arrow key to return to previous menu.\n";
 										return TakeBackKey();												//	Waits until the user presses the back(left) arrow and then closes the menu
 									}
 
@@ -839,15 +854,18 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 
 								cout << "Added user to course.\n";	
 
+								cout << "Press left arrow key to return to previous menu.\n";
 								return TakeBackKey();														//	Waits until the user presses the back(left) arrow and then closes the menu
 							}
 							else {																			//	Enters here if there are no existing courses
 								cout << "Warning! No existing courses.\n";
+								cout << "Press left arrow key to return to previous menu.\n";
 								return TakeBackKey();														//	Waits until the user presses the back(left) arrow and then closes the menu
 							}
 						}
 						else {																				//	Enters here if the user has chosen a user of any other tpye than student(0) or teacher(2)
 							cout << "Warning! You selected an invalid account-type. Try again.\n";
+							cout << "Press left arrow key to return to previous menu.\n";
 							return TakeBackKey();															//	Waits until the user presses the back(left) arrow and then closes the menu
 						}
 					}
@@ -856,6 +874,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 				if (!selectedExistingUser)																	//	Enters here if the user hasn't selected an existing ID/user
 				{
 					cout << "Warning! Invalid ID. Try again.\n";
+					cout << "Press left arrow key to continue.\n";
 					TakeBackKey();																			//	Waits until the user presses the back(left) arrow and then continues with the loop
 				}
 			} while (!selectedExistingUser);																//	Loops while the user hasn't selected an existing user
@@ -864,6 +883,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			cout << "Warning! No student or teacher accounts found on record.\n";
 		}
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();																				//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "assignGuardian")												//	Enters here and lets admin assign a student a guardian
@@ -937,6 +957,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 												if (guardiansChild == selectedStudentID)										//	Checks if the indexed child is equal to the selected student
 												{
 													cout << "Warning! The chosen child has already been assigned to this guardian.\n";
+													cout << "Press left arrow key to return to previous menu.\n";
 													return TakeBackKey();														//	Waits until the user presses the back(left) arrow and then closes the menu
 												}
 											}
@@ -955,6 +976,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 										EditFile(selectedGuardianFileContent, selectedGuardianFile);							//	Overwrites the selected guardian's userfile with the edited selectedGuardianFileContent matrix
 
 										cout << "Guardian assigned.\n";
+										cout << "Press left arrow key to return to previous menu.\n";
 										return TakeBackKey();																	//	Waits until the user presses the back(left) arrow and then closes the menu
 									}
 									else {																						//	Enters here if the selected guardian ID isn't a guardian account
@@ -979,6 +1001,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			cout << "Warning! No guardian accounts found on record.\n";
 		}
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();																									//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "studentSupportReport")						//	Enters here and lets admin see which students are struggling as well as any guardians (and the guardians contact details)
@@ -1036,10 +1059,12 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			}
 		}
 
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();											//	Waits until the user has pressed the back(left) arrow and then closes the menu
 	}
 	else {																//	Enters here if the menu csv file does not specify an input type
 		cout << "ERROR! CSV menu file does not specify valid input type.\n";
+		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();											//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 }

@@ -1,8 +1,6 @@
 ﻿  UI_Menu.cpp
 C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(63,47): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(273,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(712,10): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
-C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(1068): warning C4715: 'UI_Menu::PrintMenu': not all control paths return a value
-  LINK : C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\x64\Debug\School_Information_System.exe not found or not built by the last incremental link; performing full link
+C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(59,47): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(259,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\School_Information_System\UI_Menu.cpp(1070): warning C4715: 'UI_Menu::PrintMenu': not all control paths return a value
   School_Information_System.vcxproj -> C:\Users\olive\Documents\GitHub\103_Integrated_Studio_Assignment_2\x64\Debug\School_Information_System.exe
