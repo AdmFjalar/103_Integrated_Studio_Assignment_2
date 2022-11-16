@@ -237,55 +237,55 @@ bool UI_Menu::UserLogin()
 /// </summary>
 void UI_Menu::CreateUserAccount()
 {
-	string name, password, email;			//	Stores users input values for name, password, and email
-	int id, userAccessLevel;				//	Stores generated ID and chosen userAccessLevel (user type)
+	string name, password, email;															//	Stores users input values for name, password, and email
+	int id, userAccessLevel;																//	Stores generated ID and chosen userAccessLevel (user type)
 
-	userAccessLevel = 0;					//	Defaults userAccessLevel (user type) to 0 (student)
-	id = 0;									//	Defaults ID to 0
+	userAccessLevel = 0;																	//	Defaults userAccessLevel (user type) to 0 (student)
+	id = 0;																					//	Defaults ID to 0
 
 	cout << "\n------------------------------- Create account -------------------------------" << "\n\n\n";
 
 	// Taking user input for username, password, and email
 	cout << "Enter your username: ";
-	cin >> name;											//	Stores input name
+	cin >> name;																			//	Stores input name
 	cout << "Enter your password: ";
-	cin >> password;										//	Stores input password
+	cin >> password;																		//	Stores input password
 	cout << "Enter your email: ";
-	cin >> email;											//	Stores input email
+	cin >> email;																			//	Stores input email
 
 	do {
 		cout << "Enter account type : \n";
 		cout << "0. Student\n";
 		cout << "1. Guardian\n";
 		cout << "2. Teacher\n";
-		cin >> userAccessLevel;								//	Stores input user type
+		cin >> userAccessLevel;																//	Stores input user type
 
-		if (userAccessLevel < 0 || userAccessLevel > 2)		//	Checks if the user has chosen an invalid user type
+		if (userAccessLevel < 0 || userAccessLevel > 2)										//	Checks if the user has chosen an invalid user type
 		{
 			cout << "Invalid account type! Please try again.\n";
 		}
-	} while (userAccessLevel < 0 || userAccessLevel > 2);	//	Restarts loop if the user has chosen an invalid user type
+	} while (userAccessLevel < 0 || userAccessLevel > 2);									//	Restarts loop if the user has chosen an invalid user type
 
 	//------------------------------------------------------------------------------------------
 	//--------------------------------- START OF ID ASSIGNMENT ---------------------------------
 	//------------------------------------------------------------------------------------------
 
-	srand(time(NULL));					//	Sets seed for randomization
+	srand(time(NULL));																		//	Sets seed for randomization
 
-	id = rand() % 500000 + 270000000;	//	Sets an ID between 270000000 - 270500000
+	id = rand() % 500000 + 270000000;														//	Sets an ID between 270000000 - 270500000
 
 	//---------------- Validating unique ID ----------------
-	vector<vector<string>> fileContent = ReadFile("userDataBase.csv");		//	Reads userDataBase.csv and stores content in a matrix of sorts
+	vector<vector<string>> fileContent = ReadFile("userDataBase.csv");						//	Reads userDataBase.csv and stores content in a matrix of sorts
 
-	if (!fileContent.empty())			//	Checks if there's any content loaded from the file
+	if (!fileContent.empty())																//	Checks if there's any content loaded from the file
 	{
-		if (!fileContent[0].empty())	//	Checks if first row has any content
+		if (!fileContent[0].empty())														//	Checks if first row has any content
 		{
-			for (vector<string> user : fileContent)	//	Loops through every user from the userdatabase
+			for (vector<string> user : fileContent)											//	Loops through every user from the userdatabase
 			{
-				while (user[0] == std::to_string(id))	//	Loops while the generated ID is equal to the indexed user (to avoid duplicate ID's)
+				while (user[0] == std::to_string(id))										//	Loops while the generated ID is equal to the indexed user (to avoid duplicate ID's)
 				{
-					id = rand() % 1000000 + 270000000;	//	Generates a new ID
+					id = rand() % 1000000 + 270000000;										//	Generates a new ID
 				}
 			}
 		}
@@ -298,118 +298,112 @@ void UI_Menu::CreateUserAccount()
 
 	cout << "You've been assigned ID " << id << "\n\n";
 
-	fstream userDataBase("userDataBase.csv", ios::app);	//	Opens filestream to userDataBase.csv
+	fstream userDataBase("userDataBase.csv", ios::app);										//	Opens filestream to userDataBase.csv
 
 	userDataBase << id << "," << name << "," << password << "," << userAccessLevel << '\n';	//	Stores user ID, name, password, and userAccessLevel (user type) in the userDataBase
 
-	userDataBase.close();								//	Closes / dereferences the filestream
+	userDataBase.close();																	//	Closes / dereferences the filestream
 
-	string userFile = std::to_string(id);				//	
-	userFile.append(".csv");
+	string userFile = std::to_string(id);													//	Creates a filepath equal to the user ID
+	userFile.append(".csv");																//	Adds file type (.CSV) to file path
 
-	userDataBase.open(userFile, ios::out);
+	userDataBase.open(userFile, ios::out);													//	Opens an output filestream to the user filepath
 
-	userDataBase << id << "\n" << name << "\n" << password << "\n" << userAccessLevel << "\nplaceholder\n" << email << "\nplaceholder";
+	userDataBase << id << "\n" << name << "\n" << password << "\n" << userAccessLevel << "\nplaceholder\n" << email << "\nplaceholder";	//	Stores ID, name, passowrd, userAccessLevel (user type), a placeholder (used for different things for different user types), email, and another placeholder
 
-	userDataBase.close();
+	userDataBase.close();																	//	Closes / dereferences the filestream
+
+	cout << "Press left key to continue to main menu.\n";
+
+	TakeBackKey();																			//	Waits for the user to press the back key before continuing;
 }
 
 void UI_Menu::EditGrades(string courseName)
 {
-	string newGrade;
-	int userInput;
+	string newGrade;																		//	Used to store input new grade
+	int userInput;																			//	Used to store input index choice for user
 
-	courseName.append(".csv");
+	courseName.append(".csv");																//	Adds file type (.CSV) to courseName
 
-	vector<vector<string>> fileContent = ReadFile(courseName);
+	vector<vector<string>> fileContent = ReadFile(courseName);								//	Reads course file and stores contents in a matrix of sorts
 
-	for (int i = 0; i < fileContent.size(); i++)
+	for (int i = 0; i < fileContent.size(); i++)											//	Loops through the matrix rows
 	{
-		cout << i << ".\t";
-		for (string cell : fileContent[i])
+		cout << i << ".\t";																	//	Outputs index as well as an indentation
+		for (string cell : fileContent[i])													//	Loops through cells of the current row/user
 		{
-			cout << cell << "\t";
+			cout << cell << "\t";															//	Outputs the value of the current cell (ID, name, or grade)
 		}
-		cout << "\n";
+		cout << "\n";																		//	Outputs a linebreak
 	}
 
-	do
+	do																						//	Loops atleast once
 	{
 		cout << "Which student's grade would you like to change? (Enter index, or -1 to exit) : ";
-		cin >> userInput;
-		cout << "\n\n";
+		cin >> userInput;																	//	Stores input index in userInput
+		cout << "\n\n";																		//	Outputs 2 linebreaks
 
-		if ((userInput < 0 || userInput >= fileContent.size()) && userInput != -1)
+		if ((userInput < 0 || userInput >= fileContent.size()) && userInput != -1)			//	Checks if input is out of range/invalid
 		{
 			cout << "Warning! Invalid input. Try again.\n\n";
 		}
-	} while ((userInput < 0 || userInput >= fileContent.size()) && userInput != -1);
+	} while ((userInput < 0 || userInput >= fileContent.size()) && userInput != -1);		//	Loops while the input is out of range/invalid
 
-	if (userInput == -1)
+	if (userInput == -1)																	//	Checks if the input is -1, meaning the user wants to leave the menu
 	{
 		cout << "Exiting menu.\n";
-		return;
+		return;																				//	Exits the function
 	}
 
-	cout << "What grade would you like to assign " << fileContent[userInput][1] << "? : ";
-	cin >> newGrade;
-	cout << "\n\n";
+	cout << "What grade would you like to assign " << fileContent[userInput][1] << "? : ";	//	Outputs question/instruction as well as name of selected user
+	cin >> newGrade;																		//	Stores input value in newGrade
+	cout << "\n\n";																			//	Outputs 2 linebreaks
 
-	fileContent[userInput][2] = newGrade;
+	fileContent[userInput][2] = newGrade;													//	Sets grade of selected student to newGrade
 
-	fstream courseDataBase(courseName, ios::out);
+	fstream courseDataBase(courseName, ios::out);											//	Opens an output filestream to the selected coursefile
 
-	for (int i = 0; i < fileContent.size(); i++)
+	for (int i = 0; i < fileContent.size(); i++)											//	Loops through the filecontent matrix
 	{
-		courseDataBase << fileContent[i][0] << "," << fileContent[i][1] << "," << fileContent[i][2];
-		if (i != fileContent.size() - 1)
-		{
-			courseDataBase << "\n";
-		}
+		courseDataBase << fileContent[i][0] << "," << fileContent[i][1] << "," << fileContent[i][2] << '\n';	//	Inputs the current indexed row of the matrix into the coursefile
+
 	}
 
-	// closing the .csv file
-	courseDataBase.close();
+	courseDataBase.close();																	//	Closes / dereferences the filestream
 
-	//clearing the file content vector
-	fileContent.clear();
+	fileContent.clear();																	//	Empties the filecontent matrix
 }
 
 vector<vector<string>> UI_Menu::ReadFile(string fileName)
 {
-	fstream file;
+	fstream file(fileName, ios::in);					//	Opens a filestream to fileName
 
-	file.open(fileName, ios::in | ios::app);
+	string line, cell;									//	Used to temporarily store line and cells of file
 
-	string line, cell;
+	vector<string> row;									//	Used to temporarily store row
 
-	// Vectors to divide up .csv file into rows and cells
-	vector<string> row;
+	vector<vector<string>> fileContent;					//	Used to store file contents in a matrix
 
-	vector<vector<string>> fileContent;
-
-	// conditional statement to check if the file is open
+	// Checks if the file is open
 	if (!file.is_open()) {
 		cout << "Warning file is not open" << '\n';
 		return fileContent;
 	}
 
-	// reading the line in the userDataBase
-	while (getline(file, line, '\n')) {
-		row.clear();
-		// assigning the variable line to stream
-		stringstream stream(line);
+	while (getline(file, line, '\n')) {					//	Loops through every line, stores contents in line and indexes next line when it comes across a linebreak (\n)
+		row.clear();									//	Clears previous row contents
+		stringstream stream(line);						//	Opens a stringstream from line
 
 		// reading through the variables
-		while (getline(stream, cell, ',')) {
-			row.push_back(cell);
+		while (getline(stream, cell, ',')) {			//	Loops through the stringstream, stores contents in cell and indexes next word when it comes across a comma (,)
+			row.push_back(cell);						//	Adds the cell into the row
 		}
-		fileContent.push_back(row);
+		fileContent.push_back(row);						//	Adds the row to the filecontents matrix
 	}
 
-	file.close();
+	file.close();										//	Closes / dereferences the filestream
 
-	return fileContent;
+	return fileContent;									//	Returns the filecontents
 }
 
 /// <summary>
@@ -420,46 +414,21 @@ vector<vector<string>> UI_Menu::ReadFile(string fileName)
 /// <returns>Returns if it should keep printing or not</returns>
 bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 {
-	string userFileName = std::to_string(id);
-	userFileName.append(".csv");
+	string userFileName = std::to_string(id);							//	Stores filepath to user file
+	userFileName.append(".csv");										//	Adds file type (.CSV) to user filepath
 
-	vector<vector<string>> userFileContent = vector<vector<string>>();
+	vector<vector<string>> userFileContent = vector<vector<string>>();	//	Creates a matrix that will be used to store contents of the user file
 	
-	if (id != 0)
+	if (id != 0)														//	Checks if the ID isn't 0 (default)
 	{
-		userFileContent = ReadFile(userFileName);
+		userFileContent = ReadFile(userFileName);						//	Reads the user file and stores contents in the userFileContent matrix
 	} 
 
-	if (menuFile != "No_Menu_File")
+	if (menuFile != "No_Menu_File")										//	Checks if the menuFile is not specified as no menu file
 	{
-		fstream fileStream;												//	Declares the filestream used to load the contents of the menu csv file
+		vector<vector<string>> fileContent = ReadFile(menuFile);		//	Reads the menuFile and stores the contents in the fileContent matrix
 
-		fileStream.open(menuFile, ios::in | ios::beg);		//	Opens specified menu file
-
-		if (!fileStream.is_open())										//	Checks if the file failed to open
-		{
-			cout << "Warning! File could not be opened.\n";				//	Gives warning message
-			return false;												//	Exits the function
-		}
-
-		string line, word;												//	Line is fed the rows, word is used for the cells of the table
-		vector<string> row;												//	Stores individual cells in a row, allowing for indexing of the row
-		vector<vector<string>> fileContent;								//	Stores the entire table of rows, allowing for indexing both x and y axis
-
-		while (getline(fileStream, line, '\n'))		//	Goes through row for row and feeds each currently indexed row into line
-		{
-			row.clear();												//	Clears previously held row information
-			stringstream stream(line);									//	Prepares the line for stream manipulation
-			while (getline(stream, word, ','))		//	Goes through cell for cell and feeds each currently indexed cell into word
-			{
-				row.push_back(word);								//	Adds the currently indexed cell to the current row
-			}
-			fileContent.push_back(row);								//	Feeds the row into the table/matrix
-		}
-
-		fileStream.close();												//	Disassociates/closes the filestream
-
-		if (inputType == "arrow_keys")
+		if (inputType == "arrow_keys")									//	Checks if the inputType is set to arrow_keys
 		{
 			cout << "-----------------------------------------\n";		//	Outputs a line to outline instructions
 			cout << "--------- Navigate with arrow keys ------\n";		//	Outputs instructions for how to navigate the menu
@@ -483,9 +452,9 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			cout << "-----------------------------------------\n";		//	Outputs a line to outline menu
 			cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";				//	Adds 18 linebreaks so that only the current menu is visible
 
-			return TakeArrowKeys(menuFile, id);								//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
+			return TakeArrowKeys(menuFile, id);							//	Takes input for the menu, and returns if the user has selected to stay in the menu or not
 		}
-		else if (inputType == "none")
+		else if (inputType == "none")									//	Checks if the inputType is specified as none, thus meaning a display menu, not a navigational one
 		{
 			cout << "-----------------------------------------\n";		//	Outputs a line to outline menu
 			for (int i = 0; i < fileContent.size(); i++)				//	Goes through all the options in the menu file
@@ -495,137 +464,136 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			}
 			cout << "-----------------------------------------\n";		//	Outputs a line to outline menu
 			cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";				//	Adds 18 linebreaks so that only the current menu is visible
-			return TakeBackKey();
+			return TakeBackKey();										//	Waits until the user presses the back(left)arrow and then closes the menu
 		}
-	}
+	}							
 	else if (inputType == "login")										//	Enters here and loads a login screen if the user has chosen a login option
 	{
-		UserLogin();
-		return false;
+		UserLogin();													//	Calls login function
+		return false;													//	Closes menu
 	}
 	else if (inputType == "signup") {									//	Enters here and loads a signup screen if the user has chosen a signup option
-		CreateUserAccount();
-		return false;
+		CreateUserAccount();											//	Calls signup function
+		return false;													//	Closes menu
 	}
 	else if (inputType == "schoolInformation")							//	Enters here and loads school information (name of school, term times)
 	{
-		vector<vector<string>> schoolContent = ReadFile("school.csv");
+		vector<vector<string>> schoolContent = ReadFile("school.csv");	//	Reads school file contents and stores them in the schoolContent matrix
 
-		cout << "  " << schoolContent[0][0] << "\n\n";
+		cout << '\t' << schoolContent[0][0] << "\n\n";					//	Outputs an indentation and school name
 		
-		cout << "  Terms:\n";
-		for (string term : schoolContent[2])
+		cout << "\tTerms:\n";
+		for (string term : schoolContent[2])							//	Loops through all terms specified in the schoolContent
 		{
-			cout << "    " << term << '\n';
+			cout << "\t\t" << term << '\n';								//	Outputs 2 indentations and the currently indexed term
 		}
 
-		return TakeBackKey();
+		return TakeBackKey();											//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "facultyList")								//	Enters here and loads staff members and their contact details
 	{
 		cout << "  Faculty :\n";
 
-		vector<vector<string>> userDataBase = ReadFile("userDataBase.csv");
+		vector<vector<string>> userDataBase = ReadFile("userDataBase.csv");	//	Reads the user database and stores the contents in the userDataBase matrix
 
-		for (vector<string> user : userDataBase)
+		for (vector<string> user : userDataBase)							//	Loops through every user in the user database
 		{
-			string userFileName = user[0];
-			userFileName.append(".csv");
-			vector<vector<string>> userFile = ReadFile(userFileName);
-
-			if (user[3] == std::to_string(2) || user[3] == std::to_string(3))
+			if (user[3] == "2" || user[3] == "3")							//	Checks if the indexed user is of userAccessLevel (user type) teacher (2) or admin (3)
 			{
-				cout << "    " << user[1] << "\t";
+				string userFileName = user[0];								//	Copies user's ID for user filepath
+				userFileName.append(".csv");								//	Adds filetype (.CSV) to user filepath
+				vector<vector<string>> facultyMemberFileContent = ReadFile(userFileName);	//	Reads user file contents and saves them in the facultyMemberContent matrix
+				cout << '\t' << user[1] << '\t';							//	Outputs indentation and user's name
 
-				for (string cell : userFile[5])
+				for (string contactMethod : facultyMemberFileContent[5])				//	Loops through the user's contact methods
 				{
-					cout << cell;
+					cout << contactMethod;									//	Outputs contact method
 				}
-				cout << '\n';
+				cout << '\n';												//	Outputs a linebreak
 			}
 		}
 
-		return TakeBackKey();
+		return TakeBackKey();												//	Waits until user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "editGradeMenu")								//	Enters here and lets user edit grades of any student enrolled in their courses
 	{
-		if (userFileContent[4][0] != "placeholder")
+		if (userFileContent[4][0] != "placeholder")						//	Checks if the first course specified in the user's file is not a placeholder
 		{
-			for (int i = 0; i < userFileContent[4].size(); i++)
+			for (int i = 0; i < userFileContent[4].size(); i++)			//	Loops through the user's courses
 			{
-				cout << i << ".\t" << userFileContent[4][i] << '\n';
+				cout << i << ".\t" << userFileContent[4][i] << '\n';	//	Outputs the index and name of the indexed course
 			}
-			cout << '\n';
+			cout << '\n';												//	Outputs a linebreak
 
-			int courseSelection = 0;
+			int courseSelection = 0;									//	Used to store user input for course selection
 
-			do
+			do															//	Loops atleast once
 			{
-				cin >> courseSelection;
+				cin >> courseSelection;									//	Takes input for course selection (by index, not name)
 
-				if (courseSelection < 0 || courseSelection >= userFileContent[4].size())
+				if (courseSelection < 0 || courseSelection >= userFileContent[4].size())	//	Checks if the input value is out of bounds/invalid
 				{
 					cout << "Invalid selection! Please try again.\n";
 				}
-			} while (courseSelection < 0 || courseSelection >= userFileContent[4].size());
-			EditGrades(userFileContent[4][courseSelection]);
+			} while (courseSelection < 0 || courseSelection >= userFileContent[4].size());	//	Loops while the input value is out of bounds/invalid
+			EditGrades(userFileContent[4][courseSelection]);			//	Calls the editgrades function for the selected course
 		}
-		else {
+		else {															//	Enters here if the user has no assigned courses (thus a default value of placeholder at the first course index)
 			cout << "Warning! No courses assigned to this account.\n";
 		}
-		return false;
+		return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
-	else if (inputType == "guardianGrades")								//	Enters here and lets guardian see their children and any of their related courses as well as course progress
+	else if (inputType == "guardianGrades")										//	Enters here and lets guardian see their children and any of their related courses as well as course progress
 	{
-		if (userFileContent[4][0] != "placeholder")
+		if (userFileContent[4][0] != "placeholder")								//	Checks if the first child specified in the user's file is not a placeholder
 		{
-			for (string child : userFileContent[4])
+			for (string child : userFileContent[4])								//	Loops through children in the userfile
 			{
-				string childFile = child;
-				childFile.append(".csv");
-				vector<vector<string>> childFileContent = ReadFile(childFile);
+				string childFile = child;										//	Sets a filepath to the childfile with the child's ID
+				childFile.append(".csv");										//	Adds filetype (.CSV) to the child's filepath
+				vector<vector<string>> childFileContent = ReadFile(childFile);	//	Reads the child file and stores the contents in the childFileContent matrix
 
-				cout << child << "  " << childFileContent[1][0] << '\n';
+				cout << child << '\t' << childFileContent[1][0] << '\n';		//	Outputs the child's ID and name
 
-				if (childFileContent[4][0] != "placeholder")
+				if (childFileContent[4][0] != "placeholder")					//	Checks if the child's first course isn't a placeholder
 				{
-					for (int i = 0; i < childFileContent[4].size(); i++)
+					for (int i = 0; i < childFileContent[4].size(); i++)		//	Loops through the child's assigned courses
 					{
-						string tempString, displayString = childFileContent[4][i];
+						string tempString, displayString = childFileContent[4][i];	//	Tempstring used for filepath to course, displaystring is used to display the course name
 
-						tempString = displayString;
-						tempString.append(".csv");
+						tempString = displayString;								//	Sets the tempstring equal to the displaystring
+						tempString.append(".csv");								//	Sets the filetype (.CSV) to tempstring
 
-						displayString[i] = std::toupper(displayString[0]);
-						displayString.insert(0, ("\t"));
+						displayString[i] = std::toupper(displayString[0]);		//	Sets first letter of the displayString to a capital letter
+						displayString.insert(0, ("\t"));						//	Inputs a tab in the beginning of the displayString
 
-						vector<vector<string>> courseDataBase = ReadFile(tempString);
-						for (vector<string> user : courseDataBase)
+						vector<vector<string>> courseDataBase = ReadFile(tempString);	//	Loads course file (from tempString filepath) and stores contents in the courseDataBase matrix
+						for (vector<string> user : courseDataBase)				//	Loops through every user in the course file
 						{
-							if (user[0] == child)
+							if (user[0] == child)								//	Checks if the indexed user is the indexed child
 							{
-								displayString.append(" :\t");
-								displayString.append(user[2]);
+								displayString.append(" :\t");					
+								displayString.append(user[2]);					//	Appends grade of user to the displaystring
 							}
 						}
 
-						cout << "  " << displayString << '\n';
+						cout << "\t" << displayString << '\n';					//	Outputs the displaystring
 					}
 				}
-				else {
+				else {															//	Enters here if the child has no courses assigned (thus having a default value of placeholder at index 0 of courses)
 					cout << "\tNo courses assigned.\n";
 				}
-				cout << '\n';
+				cout << '\n';													//	Outputs a linebreak
 			}
 		}
-		else {
+		else {																	//	Enters here if the user has no children assigned
 			cout << "Warning! No children assigned to your account.\n";
 		}
-		return TakeBackKey();
+		return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 	else if (inputType == "studentGrades")								//	Enters here and lets student see their grades/progress in all their enrolled courses
 	{
-		if (userFileContent[4][0] != "placeholder")
+		if (userFileContent[4][0] != "placeholder")								//	Checks if the 
 		{
 			for (int i = 0; i < userFileContent[4].size(); i++)
 			{
