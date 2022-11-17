@@ -53,7 +53,7 @@ private:
 	/// </summary>
 	/// <param name="fileContent">The matrix that will be fed into the file</param>
 	/// <param name="filePath">Filepath to the file to edit (fileName.csv)</param>
-	void EditFile(vector<vector<string>> fileContent, string filePath);
+	void EditFile(vector<vector<string>> fileContent, string filePath, bool addLineBreakOnLastLine);
 
 public:
 	/// <summary>

@@ -408,7 +408,7 @@ vector<vector<string>> UI_Menu::ReadFile(string fileName)
 	return fileContent;									//	Returns the filecontents
 }
 
-void UI_Menu::EditFile(vector<vector<string>> fileContent, string filePath)
+void UI_Menu::EditFile(vector<vector<string>> fileContent, string filePath, bool addLineBreakOnLastLine)
 {
 	fstream editFile(filePath, ios::out);					//	Opens an output filestream
 
@@ -423,10 +423,9 @@ void UI_Menu::EditFile(vector<vector<string>> fileContent, string filePath)
 				editFile << ",";							//	Writes a comma (,) to the editFile
 			}
 		}
-
-		if (i != fileContent.size() - 1)					//	Checks if the row is not the last in the fileContent matrix
+		if (i < (fileContent.size() - 1) || addLineBreakOnLastLine)
 		{
-			editFile << "\n";								//	Writes a linebreak (\n) to the editFile
+			editFile << "\n";									//	Writes a linebreak (\n) to the editFile
 		}
 	}
 
@@ -516,7 +515,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 	}
 	else if (inputType == "facultyList")									//	Enters here and loads staff members and their contact details
 	{
-		cout << "  Faculty :\n";
+		cout << "\tFaculty :\n";
 
 		vector<vector<string>> userDataBase = ReadFile("userDataBase.csv");	//	Reads the user database and stores the contents in the userDataBase matrix
 
@@ -527,7 +526,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 				string userFileName = user[0];								//	Copies user's ID for user filepath
 				userFileName.append(".csv");								//	Adds filetype (.CSV) to user filepath
 				vector<vector<string>> facultyMemberFileContent = ReadFile(userFileName);	//	Reads user file contents and saves them in the facultyMemberContent matrix
-				cout << '\t' << user[1] << '\t';							//	Outputs indentation and user's name
+				cout << "\t\t" << user[1] << '\t';							//	Outputs indentation and user's name
 
 				for (string contactMethod : facultyMemberFileContent[5])				//	Loops through the user's contact methods
 				{
@@ -548,13 +547,18 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			{
 				cout << i << ".\t" << userFileContent[4][i] << '\n';	//	Outputs the index and name of the indexed course
 			}
-			cout << '\n';												//	Outputs a linebreak
+			cout << "Please input index of course to edit grades (Input - 1 to leave menu) : ";												//	Outputs a linebreak
 
 			int courseSelection = 0;									//	Used to store user input for course selection
 
 			do															//	Loops atleast once
 			{
 				cin >> courseSelection;									//	Takes input for course selection (by index, not name)
+
+				if (courseSelection == -1)								//	Enters here if the user has input -1, thus asking to leave the menu
+				{
+					return false;
+				}
 
 				if (courseSelection < 0 || courseSelection >= userFileContent[4].size())	//	Checks if the input value is out of bounds/invalid
 				{
@@ -679,8 +683,13 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		do																	//	Loops atleast once
 		{
 			uniqueCourseName = true;										//	Resets uniqueCourseName to true
-			cout << "Please enter name of course : ";					
+			cout << "Please enter name of course (Input -1 to leave menu) : ";					
 			cin >> nameOfCourse;											//	Stores desired coursename
+
+			if (nameOfCourse == "-1")										//	Enters here if the user has input -1, thus asking to leave the menu
+			{
+				return false;
+			}
 
 			vector<vector<string>> coursesFileContent = ReadFile("courses.csv");	//	Reads the courses file and stores the content in the coursesFileContent matrix
 
@@ -732,6 +741,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 			else if (user[3] == "2")																		//	Checks if the indexed user's useraccesslevel(user type) is teacher(2)
 			{
 				cout << "TEACHER\t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type student, user's ID and name
+				numOfTeachers++;
 			}
 		}
 
@@ -741,8 +751,13 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 
 			do																								//	Loops atleast once
 			{
-				cout << "Please enter ID of user from list to assign a course.\n";
+				cout << "Please enter ID of user from list to assign a course. (Input -1 to leave menu)\n";
 				cin >> selectedUserID;																		//	Stores input ID for user to assign a course
+
+				if (selectedUserID == "-1")																	//	Enters here if the user has input -1, thus asking to leave the menu
+				{
+					return false;
+				}
 
 				for (vector<string> user : userDataBaseContent)												//	Loops through user's in the user database
 				{
@@ -771,8 +786,13 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 										cout << "\t" << course[0] << "\n";									//	Outputs the course name
 									}
 
-									cout << "Please enter name of course you want to assign " << selectedUserFileContent[1][0] << "\n";	//	Outputs instructions and the name of the selected user
+									cout << "Please enter name of course you want to assign " << selectedUserFileContent[1][0] << " (Input -1 to leave menu)\n";	//	Outputs instructions and the name of the selected user
 									cin >> selectedCourse;													//	Stores the input for desired course
+
+									if (selectedCourse == "-1")												//	Enters here if the user has input -1, thus asking to leave the menu
+									{
+										return false;
+									}
 
 									for (vector<string> course : courses)									//	Loops through the courses in courses
 									{
@@ -805,34 +825,7 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 									selectedUserFileContent[4].push_back(selectedCourse);					//	Adds the desired course to the selected user's courses
 								}
 
-								fstream changeUserFile(selectedUserFile, ios::out);							//	Opens an output filestream to the selected users filepath
-
-								if (!changeUserFile.is_open())												//	Checks if the filestream failed to open
-								{
-									cout << "Warning! File couldn't be opened.\n";
-									cout << "Press left arrow key to return to previous menu.\n";
-									return TakeBackKey();													//	Waits until the user presses the back(left) arrow and then closes the menu
-								}
-
-
-								for (int i = 0; i < selectedUserFileContent.size(); i++)					//	Loops through the selectedUserFileContent matrix's rows
-								{
-									for (int j = 0; j < selectedUserFileContent[i].size(); j++)				//	Loops through the selectedUserFileContent matrix's rows' cells
-									{
-										changeUserFile << selectedUserFileContent[i][j];					//	Outputs the indexed cell of the selectedUserFileContent to the selected user's file
-										if (j != selectedUserFileContent[i].size() - 1)						//	Checks if it isn't indexing the last cell of the row
-										{
-											changeUserFile << ",";											//	Adds a comma (,) to separate the cells
-										}
-									}
-
-									if (i != selectedUserFileContent.size() - 1)							//	Checks if it isn't indexing the last row of the matrix
-									{
-										changeUserFile << "\n";												//	Outputs a linebreak to the file to separate rows
-									}
-								}
-
-								changeUserFile.close();														//	Closes / dereferences the filestream
+								EditFile(selectedUserFileContent, selectedUserFile, false);
 
 								if (user[3] == "0")															//	Checks if the selected user's userAccessLevel (user type) is student(0)
 								{
@@ -909,8 +902,13 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 
 		if (numOfStudents > 0 && numOfGuardians > 0)									//	Checks if there are more than 0 students and guardians
 		{
-			cout << "Please enter ID of student from list to assign a guardian.\n";
+			cout << "Please enter ID of student from list to assign a guardian. (Input -1 to leave menu)\n";
 			cin >> selectedStudentID;													//	Stores the input selected ID
+
+			if (selectedStudentID == "-1")																	//	Enters here if the user has input -1, thus asking to leave the menu
+			{
+				return false;
+			}
 
 			for (vector<string> user : userDataBaseContent)								//	Loops through the users in the user database
 			{
@@ -933,8 +931,13 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 								}
 							}
 
-							cout << "Please enter ID of guardian from list to assign a guardian.\n";
+							cout << "Please enter ID of guardian from list to assign a guardian. (Input -1 to leave menu)\n";
 							cin >> selectedGuardianID;									//	Stores the input selected guardian ID
+
+							if (selectedGuardianID == "-1")																	//	Enters here if the user has input -1, thus asking to leave the menu
+							{
+								return false;
+							}
 
 							for (vector<string> _user : userDataBaseContent)			//	Loops through the users in the user database
 							{
@@ -972,8 +975,8 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 											selectedStudentFileContent[6].push_back(selectedGuardianID);						//	Appends the selected guardian
 										}
 
-										EditFile(selectedStudentFileContent, selectedStudentFile);								//	Overwrites the selected student's userfile with the edited selectedStudentFileContent matrix
-										EditFile(selectedGuardianFileContent, selectedGuardianFile);							//	Overwrites the selected guardian's userfile with the edited selectedGuardianFileContent matrix
+										EditFile(selectedStudentFileContent, selectedStudentFile, false);								//	Overwrites the selected student's userfile with the edited selectedStudentFileContent matrix
+										EditFile(selectedGuardianFileContent, selectedGuardianFile, false);							//	Overwrites the selected guardian's userfile with the edited selectedGuardianFileContent matrix
 
 										cout << "Guardian assigned.\n";
 										cout << "Press left arrow key to return to previous menu.\n";
@@ -1003,6 +1006,444 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 
 		cout << "Press left arrow key to return to previous menu.\n";
 		return TakeBackKey();																									//	Waits until the user presses the back(left) arrow and then closes the menu
+	}
+	else if (inputType == "deleteUser")
+	{
+		vector<vector<string>> userDataBaseContent = ReadFile("userDataBase.csv");							//	Reads the userdatabase and stores the content in the userDataBaseContent matrix
+
+		string selectedUserID, selectedUserFile;															//	selectedUserID is used to select a user to assign the course, selectedUserFile is the corresponding filepath to that user
+		int numOfUsers = 0;																					//	Stores amount of users
+
+		for (vector<string> user : userDataBaseContent)														//	Loops through every user in the user database
+		{
+			numOfUsers++;
+			if (user[3] == "0")																				//	Checks if the indexed user's useraccesslevel(user type) is student(0)
+			{
+				cout << "STUDENT \t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type student, user's ID and name
+			}
+			else if (user[3] == "1")																		//	Checks if the indexed user's useraccesslevel(user type) is guardian(1)
+			{
+				cout << "GUARDIAN\t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type guardian, user's ID and name
+			}
+			else if (user[3] == "2")																		//	Checks if the indexed user's useraccesslevel(user type) is teacher(2)
+			{
+				cout << "TEACHER \t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type teacher, user's ID and name
+			}
+			else if (user[3] == "3")																		//	Checks if the indexed user's useraccesslevel(user type) is admin(3)
+			{
+				cout << "ADMIN   \t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type admin, user's ID and name
+			}
+		}
+
+		if (numOfUsers > 1)
+		{
+			bool selectedExistingUser = true;
+			do																								//	Loops atleast once
+			{
+				cout << "Please enter ID of user from list to remove. (Input -1 to leave menu)\n";
+				cin >> selectedUserID;																		//	Stores input ID for user to assign a course
+
+				if (selectedUserID == "-1")																	//	Enters here if the user has input -1, thus asking to leave the menu
+				{
+					return false;
+				}
+				
+				for (int i = 0; i < userDataBaseContent.size(); i++)										//	Loops through user's in the user database
+				{
+					if (userDataBaseContent[i][0] == selectedUserID)										//	Checks if the indexed user's ID is the selectedUserID
+					{
+						selectedUserFile = selectedUserID;													//	Sets user filepath to selectedUserID
+						selectedUserFile.append(".csv");													//	Adds filetype (.CSV)
+						selectedExistingUser = true;														//	Stores that the ID belongs to a valid user
+
+						if (userDataBaseContent[i][3] == "0")												//	Checks if the user is of type student(0) or teacher(2)
+						{
+							vector<vector<string>> selectedUserFileContent = ReadFile(selectedUserFile);	//	Reads the selectedUserFile and stores the content in the selectedUserFileContent matrix
+
+							if (selectedUserFileContent[4][0] != "placeholder")								//	Checks if the user's first course isn't a placeholder
+							{
+								for (string userCourse : selectedUserFileContent[4])						//	Loops through the selected users already assigned courses
+								{
+									string courseFile = userCourse;											//	Sets a filepath to the indexed course
+									courseFile.append(".csv");												//	Adds file type (.CSV)
+
+									vector<vector<string>> courseFileContent = ReadFile(courseFile);		//	Reads the coursefile and stores the contents in the courseFileContent matrix
+
+									for (int i = 0; i < courseFileContent.size(); i++)						//	Loops through the courseFileContent
+									{
+										if (courseFileContent[i][0] == selectedUserID)						//	Checks if the indexed row of the course belongs to the selected user
+										{
+											courseFileContent.erase(courseFileContent.begin() + i);			//	Deletes the user's row from the course filecontent
+										}
+									}
+
+									EditFile(courseFileContent, courseFile, true);								//	Overwrites the coursefile with the edited course file content
+
+									cout << "User successfully removed from course " << userCourse << ".\n";
+								}
+							}
+
+							if (selectedUserFileContent[6][0] != "placeholder")								//	Checks if the first guardian of the student is not a placeholder
+							{
+								for (string guardian : selectedUserFileContent[6])							//	Loops through their assigned placeholders
+								{
+									string guardianFile = guardian;											//	Sets a file path to the guardians file
+									guardianFile.append(".csv");											//	Adds file type (.CSV)
+
+									vector<vector<string>> guardianFileContent = ReadFile(guardianFile);	//	Reads the guardians file and stores the contents in the guardianFileContent matrix
+
+									if (guardianFileContent[4].size() <= 1)									//	Checks if the guardian only has 1 or less children assigned
+									{
+										guardianFileContent[4][0] = "placeholder";							//	Sets the first child to a placeholder
+									}
+									else {																	//	Enters here if the guardian has more than 1 child
+										for (int j = 0; j < guardianFileContent[4].size(); j++)				//	Loops through the guardians children
+										{
+											if (guardianFileContent[4][j] == selectedUserID)				//	Checks if the indexed child is the selected user
+											{
+												guardianFileContent[4].erase(guardianFileContent[4].begin() + j);	//	Removes the child from the guardians child-list
+											}
+										}
+									}
+
+									EditFile(guardianFileContent, guardianFile, false);						//	Overwrites the guardians file with the edited guardian filecontent
+									cout << "User successfully removed from guardian " << guardian << ".\n";
+								}
+							}
+						}
+
+						if (userDataBaseContent[i][3] == "1")												//	Checks if the indexed user is a guardian(1)
+						{
+							vector<vector<string>> selectedUserFileContent = ReadFile(selectedUserFile);	//	Reads the selectedUserFile and stores the content in the selectedUserFileContent matrix
+
+							if (selectedUserFileContent[4][0] != "placeholder")								//	Checks if the first child is not a placeholder
+							{
+								for (string child : selectedUserFileContent[4])								//	Loops through the user's children
+								{
+									string childFile = child;												//	Sets a filepath child's file
+									childFile.append(".csv");												//	Adds file type (.CSV)
+
+									vector<vector<string>> childFileContent = ReadFile(childFile);			//	Reads child's file and stores contents in the childFileContent matrix
+
+									if (childFileContent[6].size() <= 1)									//	Checks if the child only has 1 or less guardians
+									{
+										childFileContent[6][0] = "placeholder";								//	Sets the first guardian to a placeholder
+									}
+									else {																	//	Enters here if the child has more than 1 guardian
+										for (int j = 0; j < childFileContent[6].size(); j++)				//	Loops through the child's guardians
+										{
+											if (childFileContent[6][j] == selectedUserID)					//	Checks if the indexed guardian is the selected user
+											{
+												childFileContent[6].erase(childFileContent[6].begin() + j);	//	Removes the guardian from the child's guardian-list
+											}
+										}
+									}
+
+									EditFile(childFileContent, childFile, false);							//	Overwrites the child's file with the child's edited file content
+									cout << "User successfully removed from guardian " << child << ".\n";
+								}
+							}
+						}
+
+						for (int i = 0; i < userDataBaseContent.size(); i++)								//	Loops through the user database
+						{
+							if (userDataBaseContent[i][0] == selectedUserID)								//	Checks if the indexed user is the selected user
+							{
+								userDataBaseContent.erase(userDataBaseContent.begin() + i);					//	Deletes the user's corresponding row from the user database content
+							}
+						}
+
+						EditFile(userDataBaseContent, "userDataBase.csv", true);							//	Overwrites the coursefile with the edited user database content
+
+						cout << "User successfully removed from user database.\n";
+
+						const char* deleteFileName = selectedUserFile.c_str();								//	Transforms the user's filepath to a char array
+
+						remove(deleteFileName);																//	Removes the user's file 
+
+						cout << "User file successfully deleted.\n";
+						cout << "Press left arrow key to return to previous menu.\n";
+						return TakeBackKey();																//	Waits until the user presses the back(left) arrow and then continues with the loop
+					}
+				}
+
+				if (!selectedExistingUser)																	//	Enters here if the user hasn't selected an existing ID/user
+				{
+					cout << "Warning! Invalid ID. Try again.\n";
+					cout << "Press left arrow key to continue.\n";
+					TakeBackKey();																			//	Waits until the user presses the back(left) arrow and then continues with the loop
+				}
+			} while (!selectedExistingUser);																//	Loops while the user hasn't selected an existing user
+		}
+		else																								//	Enters here if there are no users in the user database
+		{
+			cout << "Warning! No other users found on record.\n";
+			cout << "Press left arrow key to return to previous menu.\n";
+			return TakeBackKey();
+		}
+	}
+	else if (inputType == "deleteCourse")
+	{
+		bool existingCourseName = false;											//	Stores whether the user has entered an exustíng coursename
+		string nameOfCourse;														//	Stores input name of course
+
+		vector<vector<string>> coursesFileContent = ReadFile("courses.csv");		//	Reads the courses file and stores the content in the coursesFileContent matrix
+
+		do																			//	Loops atleast once
+		{
+			if (!coursesFileContent.empty())										//	Checks whether the courses file is not empty
+			{
+				cout << "\tCourses : \n";
+				for (vector<string> course : coursesFileContent)					//	Loops through the courses in the courses database
+				{
+					cout << "\t" << course[0] << '\n';								//	Outputs the indexed course's name
+				}
+
+				cout << "Please enter name of course (Input -1 to leave menu) : ";
+				cin >> nameOfCourse;												//	Stores input coursename
+
+				if (nameOfCourse == "-1")											//	Enters here if the user has input -1, thus asking to leave the menu
+				{
+					return false;													//	Closes the menu
+				}
+				for (int i = 0; i < coursesFileContent.size(); i++)					//	Loops through every course in the courses file
+				{
+					if (coursesFileContent[i][0] == nameOfCourse)					//	Checks if the desired coursename is equal to the indexed course
+					{
+						existingCourseName = true;									//	Stores that the course exists
+
+						string selectedCourseFile = nameOfCourse;					//	Sets a file path to the selected course
+						selectedCourseFile.append(".csv");							//	Adds file type (.CSV)
+
+						vector<vector<string>> selectedCourseFileContent = ReadFile(selectedCourseFile);	//	Reads the selected course's file and stores the contents in the selectedCourseFileContent matrix
+						
+						for (vector<string> student : selectedCourseFileContent)	//	Loops through the students in the course file
+						{
+							string studentFile = student[0];						//	Sets a filepath to the indexed student's file
+							studentFile.append(".csv");								//	Adds file type (.CSV)
+
+							vector<vector<string>> studentFileContent = ReadFile(studentFile);	//	Reads the student's userfile and stores the contents in the studentFileContent matrix
+
+							for (int j = 0; j < studentFileContent[4].size(); j++)	//	Loops through the student's course list
+							{
+								if (studentFileContent[4][j] == nameOfCourse)		//	Checks if the indexed course is the selected course
+								{
+									if (studentFileContent[4].size() <= 1)			//	Checks if the student has 1 or less courses
+									{
+										studentFileContent[4][0] = "placeholder";	//	Replaces the first course with a placeholder
+									}
+									else {											//	Enters here if the student has more than 1 course
+										studentFileContent[4].erase(studentFileContent[4].begin() + j);	//	Removes the course from the student's course list
+									}
+								}
+							}
+
+							EditFile(studentFileContent, studentFile, false);		//	Overwrites the student's file with the edited studentFileContent matrix
+							cout << "Successfully removed " << nameOfCourse << " from " << studentFileContent[0][0] << ".\n";
+						}
+
+						vector<vector<string>> userDataBaseContent = ReadFile("userDataBase.csv");	//	Reads the user database and stores the contents in the userDataBaseContent matrix
+
+						for (vector<string> user : userDataBaseContent)				//	Loops through the users in the user database
+						{
+							if (user[3] == "2")										//	Checks if the user is of type teacher(2)
+							{
+								string indexedUserFile = user[0];					//	Sets filepath to the indexed teacher
+								indexedUserFile.append(".csv");						//	Adds filetype (.CSV)
+								vector<vector<string>> indexedUserFileContent = ReadFile(indexedUserFile);	//	Reads the indexed userfile and stores the contents in the indexedUserFileContent matrix
+
+								if (indexedUserFileContent[4][0] != "placeholder")	//	Checks if the first course in the teacher's course list isn't a placeholder
+								{
+									if (indexedUserFileContent[4].size() <= 1 && indexedUserFileContent[4][0] == nameOfCourse)	//	Checks if the indexed user has 1 or less courses and if the course is the selected course
+									{
+										indexedUserFileContent[4][0] = "placeholder";	//	Sets the first course to a placeholder
+									}
+									else {											//	Enters here if the user has more than 1 course and the user's first course isn't the selected course
+										for (int j = 0; j < indexedUserFileContent[4].size(); j++)	//	Loops through the user's courses
+										{
+											if (indexedUserFileContent[4][j] == nameOfCourse)	//	Checks if the indexed course is the selected course
+											{
+												indexedUserFileContent[4].erase(indexedUserFileContent[4].begin() + j);	//	Removes the course from the user's course list
+											}
+										}
+									}
+
+									EditFile(indexedUserFileContent, indexedUserFile, false);	//	Overwrites the user's file with the edited filecontents
+									cout << "Successfully removed " << nameOfCourse << " from " << indexedUserFileContent[0][0] << ".\n";
+								}
+							}
+						}
+
+						coursesFileContent.erase(coursesFileContent.begin() + i);	//	Removes the indexed course from the courses file
+						EditFile(coursesFileContent, "courses.csv", true);
+
+						const char* deleteFileName = selectedCourseFile.c_str();								//	Transforms the user's filepath to a char array
+						remove(deleteFileName);																	//	Removes the selected course's file
+
+						cout << "Successfully removed " << nameOfCourse << " from courses database.\n";
+						cout << "Press left arrow key to return to previous menu.\n";
+						return TakeBackKey();																	//	Waits until the user presses the back(left) arrow and then closes the menu
+					}
+				}
+			}
+			else {
+				cout << "Warning! No courses found.\n";
+				cout << "Press left arrow key to return to previous menu.\n";
+				return TakeBackKey();
+			}
+		} while (!existingCourseName);										//	Loops while the course name is not unique
+	}
+	else if (inputType == "removeFromCourse")
+	{
+		vector<vector<string>> userDataBaseContent = ReadFile("userDataBase.csv");							//	Reads the userdatabase and stores the content in the userDataBaseContent matrix
+
+		string selectedUserID, selectedUserFile;															//	selectedUserID is used to select a user to assign the course, selectedUserFile is the corresponding filepath to that user
+		int numOfStudents = 0, numOfTeachers = 0;															//	Stores amount of students and teachers respectively
+
+		for (vector<string> user : userDataBaseContent)														//	Loops through every user in the user database
+		{
+			if (user[3] == "0" || user[3] == "2")															//	Checks if the user is of type student(0) or teacher(2)
+			{
+				string indexedUserFile = user[0];															//	Sets a filepath to the indexed user's file
+				indexedUserFile.append(".csv");																//	Adds file type (.CSV)
+
+				vector<vector<string>> indexedUserFileContent = ReadFile(indexedUserFile);					//	Reads the user's file and stores the contents in the indexedUserFileContent matrix
+
+				if (indexedUserFileContent[4][0] != "placeholder")											//	Checks if their first course isn't a placeholder
+				{
+					if (user[3] == "0")																				//	Checks if the indexed user's useraccesslevel(user type) is student(0)
+					{
+						cout << "STUDENT\t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type student, user's ID and name
+						numOfStudents++;
+					}
+					else if (user[3] == "2")																		//	Checks if the indexed user's useraccesslevel(user type) is teacher(2)
+					{
+						cout << "TEACHER\t" << user[0] << '\t' << user[1] << '\n';									//	Outputs that user is of type student, user's ID and name
+						numOfTeachers++;
+					}
+				}
+			}
+		}
+
+		if (numOfStudents > 0 || numOfTeachers > 0)															//	Checks if there more than 0 students or teachers
+		{
+			bool selectedExistingUser = false;																//	Stores whether the selected ID corresponds to an existing user
+
+			do																								//	Loops atleast once
+			{
+				cout << "Please enter ID of user from list to remove from a course. (Input -1 to leave menu)\n";
+				cin >> selectedUserID;																		//	Stores input ID for user to assign a course
+
+				if (selectedUserID == "-1")																	//	Enters here if the user has input -1, thus asking to leave the menu
+				{
+					return false;
+				}
+
+				for (vector<string> user : userDataBaseContent)												//	Loops through user's in the user database
+				{
+					if (user[0] == selectedUserID)															//	Checks if the indexed user's ID is the selectedUserID
+					{
+						if (user[3] == "0" || user[3] == "2")												//	Checks if the user is a student(0) or teacher(2)
+						{
+							string indexedUserFile = user[0];												//	Stores filepath to user
+							indexedUserFile.append(".csv");													//	Adds file type (.CSV)
+
+							vector<vector<string>> indexedUserFileContent = ReadFile(indexedUserFile);		//	Reads the indexed user's file and stores the contents in the indexedUserFileContent matrix
+
+							if (indexedUserFileContent[4][0] != "placeholder")								//	Checks if the user's first course isn't a placeholder
+							{
+								selectedExistingUser = true;												//	Stores that the ID belongs to a valid user
+
+								bool selectedValidCourse = false;											//	Stores if the user has selected an existing course (defaults to false)
+
+								string selectedCourse;														//	Stores the user's input for desired course
+
+								do																			//	Loops atleast once
+								{
+									for (string course : indexedUserFileContent[4])							//	Loops through the courses in courses
+									{
+										cout << "\t" << course << "\n";										//	Outputs the course name
+									}
+
+									cout << "Please enter name of course you want to remove from " << indexedUserFileContent[1][0] << " (Input -1 to leave menu)\n";	//	Outputs instructions and the name of the selected user
+									cin >> selectedCourse;													//	Stores the input for desired course
+
+									if (selectedCourse == "-1")												//	Enters here if the user has input -1, thus asking to leave the menu
+									{
+										return false;
+									}
+
+									for (int i = 0; i < indexedUserFileContent[4].size(); i++)				//	Loops through the courses in courses
+									{
+										if (indexedUserFileContent[4][i] == selectedCourse)					//	Checks if the indexed course is the selected course (desired course)
+										{
+											selectedValidCourse = true;										//	Stores that the selected course exists
+
+											string selectedCourseFile = selectedCourse;						//	Stores file path to the course file
+											selectedCourseFile.append(".csv");								//	Adds file type (.CSV)
+
+											vector<vector<string>> selectedCourseFileContent = ReadFile(selectedCourseFile);	//	Reads the selected coursefile and stores the contents in the selectedCourseFileContent matrix
+
+											for (int j = 0; j < selectedCourseFileContent.size(); j++)		//	Loops through the selected course file
+											{
+												if (selectedCourseFileContent[j][0] == selectedUserID)		//	Enters here if the indexed user is the selected user
+												{
+													selectedCourseFileContent.erase(selectedCourseFileContent.begin() + j);	//	Removes the user from the selected course
+
+													EditFile(selectedCourseFileContent, selectedCourseFile, true);			//	Overwrites the coursefile with the edited course filecontents
+													cout << "Successfully removed " << selectedUserID << " from " << selectedCourse << ".\n";
+												}
+											}
+
+											if (indexedUserFileContent[4].size() <= 1)						//	Enters here if the user has 1 or less courses
+											{
+												indexedUserFileContent[4][0] = "placeholder";				//	Sets the first course to a placeholder
+											}
+											else {															//	Enters here if the user has more than 1 course
+												indexedUserFileContent.erase(indexedUserFileContent.begin() + i);	//	Removes the course from the user's course list
+											}
+
+											EditFile(indexedUserFileContent, indexedUserFile, false);		//	Overwrites the user file with the edited user file content
+											cout << "Successfully removed " << selectedCourse << " from " << indexedUserFileContent[0][0] << '\n';
+											cout << "Press left arrow key to return to previous menu.\n";
+											return TakeBackKey();											//	Waits until the user presses the back(left) arrow key and then closes the menu
+										}
+									}
+
+									if (!selectedValidCourse)												//	Checks if the selected course does not exist
+									{
+										cout << "Warning! You selected an invalid course. Please check your spelling and try again.\n";
+									}
+								} while (!selectedValidCourse);												//	Loops while an invalid course has been selected
+							}
+							else {																			//	Enters here if there are no existing courses
+								cout << "Warning! No existing courses.\n";
+								cout << "Press left arrow key to return to previous menu.\n";
+								return TakeBackKey();														//	Waits until the user presses the back(left) arrow and then closes the menu
+							}
+						}
+						else {																				//	Enters here if the user has chosen a user of any other tpye than student(0) or teacher(2)
+							cout << "Warning! You selected an invalid account-type. Try again.\n";
+							cout << "Press left arrow key to return to previous menu.\n";
+							return TakeBackKey();															//	Waits until the user presses the back(left) arrow and then closes the menu
+						}
+					}
+				}
+
+				if (!selectedExistingUser)																	//	Enters here if the user hasn't selected an existing ID/user
+				{
+					cout << "Warning! Invalid ID. Try again.\n";
+					cout << "Press left arrow key to continue.\n";
+					TakeBackKey();																			//	Waits until the user presses the back(left) arrow and then continues with the loop
+				}
+			} while (!selectedExistingUser);																//	Loops while the user hasn't selected an existing user
+		}
+		else {																								//	Enters here if there are no student or teacher accounts in the user database
+			cout << "Warning! No student or teacher accounts found on record.\n";
+		}
+
+		cout << "Press left arrow key to return to previous menu.\n";
+		return TakeBackKey();																				//	Waits until the user presses
 	}
 	else if (inputType == "studentSupportReport")						//	Enters here and lets admin see which students are struggling as well as any guardians (and the guardians contact details)
 	{

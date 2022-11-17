@@ -1,0 +1,5 @@
+Create course,No_Menu_File,createCourse
+Delete course,No_Menu_File,deleteCourse
+Assign user to course,No_Menu_File,assignCourse
+Remove user from course,No_Menu_File,removeFromCourse
+Struggling student reports,No_Menu_File,studentSupportReport
