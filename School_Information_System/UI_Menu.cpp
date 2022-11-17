@@ -1068,3 +1068,8 @@ bool UI_Menu::PrintMenu(string menuFile, string inputType, int id)
 		return TakeBackKey();											//	Waits until the user presses the back(left) arrow and then closes the menu
 	}
 }
+
+
+
+
+// hide sidebar 
